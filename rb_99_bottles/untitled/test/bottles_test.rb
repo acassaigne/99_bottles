@@ -3,7 +3,16 @@ require 'minitest/autorun'
 require 'minitest/pride'
 # require_relative '../lib/bottles'
 
-class BottlesTest < Minitest::Test
+class Bottles
+  def verse(number)
+    "#{number} bottles of beer on the wall, " +
+      "#{number} bottles of beer.\n" +
+      "Take one down and pass it around, " +
+      "#{number - 1} bottles of beer on the wall.\n"
+  end
+end
+
+  class BottlesTest < Minitest::Test
   def test_the_first_verse
     expected =
       "99 bottles of beer on the wall, " +
@@ -14,7 +23,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_another_verse
-    skip
     expected =
       "3 bottles of beer on the wall, " +
         "3 bottles of beer.\n" +
@@ -24,7 +32,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_verse_2
-    skip
     expected =
       "2 bottles of beer on the wall, " +
         "2 bottles of beer.\n" +
