@@ -1,3 +1,4 @@
 rb_99_bottles/untitled/.idea/
 py_99_bottles/.idea/
 py_99_bottles/.mypy_cache
+**/__pycache__
