@@ -15,15 +15,26 @@ class BottleStock
   end
 
   def print
-    if @quantity == 0
+    if is_empty
       return "no more bottles"
     end
-    "#{@quantity} #{plural_form}"
+    "#{@quantity} #{bottle}"
+  end
+
+  def pronoun
+    if is_empty
+      return "it"
+    end
+    "one"
   end
 
   private
 
-  def plural_form
+  def is_empty
+    @quantity == 0
+  end
+
+  def bottle
     word = "bottle"
     if @quantity > 1
       return word + "s"
@@ -53,7 +64,7 @@ class Bottles
   end
 
   def take_one_sentence
-    "Take one down and pass it around, " +
+    "Take #{@stock.pronoun} down and pass it around, " +
       "#{@stock.print} of beer on the wall.\n"
   end
 end
