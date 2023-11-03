@@ -3,16 +3,62 @@ require 'minitest/autorun'
 require 'minitest/pride'
 # require_relative '../lib/bottles'
 
+class BottleStock
+  attr_reader :quantity
+
+  def initialize(quantity)
+    @quantity = quantity
+  end
+
+  def remove
+    @quantity -= 1
+  end
+
+  def print
+    if @quantity == 0
+      return "no more bottles"
+    end
+    "#{@quantity} #{plural_form}"
+  end
+
+  private
+
+  def plural_form
+    word = "bottle"
+    if @quantity > 1
+      return word + "s"
+    end
+    word
+  end
+
+end
+
 class Bottles
+
   def verse(number)
-    "#{number} bottles of beer on the wall, " +
-      "#{number} bottles of beer.\n" +
-      "Take one down and pass it around, " +
-      "#{number - 1} bottles of beer on the wall.\n"
+    @stock = BottleStock.new(count = number)
+    verse_stock = stock_sentence
+    stock.remove
+    verse_take_one = take_one_sentence
+    verse_stock + verse_take_one
+  end
+
+  private
+
+  attr :stock
+
+  def stock_sentence
+    "#{@stock.print} of beer on the wall, " +
+      "#{@stock.print} of beer.\n"
+  end
+
+  def take_one_sentence
+    "Take one down and pass it around, " +
+      "#{@stock.print} of beer on the wall.\n"
   end
 end
 
-  class BottlesTest < Minitest::Test
+class BottlesTest < Minitest::Test
   def test_the_first_verse
     expected =
       "99 bottles of beer on the wall, " +
@@ -41,7 +87,6 @@ end
   end
 
   def test_verse_1
-    skip
     expected =
       "1 bottle of beer on the wall, " +
         "1 bottle of beer.\n" +
