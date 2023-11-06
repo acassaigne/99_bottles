@@ -3,6 +3,28 @@ require 'minitest/autorun'
 require 'minitest/pride'
 # require_relative '../lib/bottles'
 
+class Verse
+  def initialize(bottle_stock)
+    @bottle_stock = bottle_stock
+  end
+
+  def beer_on_the_wall
+    "#{@bottle_stock.quantity} #{self.bottle} of beer on the wall, "
+  end
+
+  private
+
+  def bottle
+    if @bottle_stock.quantity > 1
+      return "bottles"
+    end
+    "bottle"
+  end
+
+  attr :bottle_stock
+
+end
+
 class BottleStock
   attr_reader :quantity
 
@@ -28,11 +50,13 @@ class BottleStock
     "one"
   end
 
-  private
 
   def is_empty
     @quantity == 0
   end
+
+  private
+
 
   def bottle
     word = "bottle"
@@ -48,6 +72,7 @@ class Bottles
 
   def verse(number)
     @stock = BottleStock.new(count = number)
+    @verse = Verse.new(bottle_stock = @stock)
     verse_stock = stock_sentence
     stock.remove
     verse_take_one = take_one_sentence
@@ -58,8 +83,13 @@ class Bottles
 
   attr :stock
 
-  def stock_sentence
+  def stock_sentence_3
     "#{@stock.print} of beer on the wall, " +
+      "#{@stock.print} of beer.\n"
+  end
+
+  def stock_sentence
+    @verse.beer_on_the_wall +
       "#{@stock.print} of beer.\n"
   end
 
