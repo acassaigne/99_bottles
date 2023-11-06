@@ -3,6 +3,8 @@ require 'minitest/autorun'
 require 'minitest/pride'
 # require_relative '../lib/bottles'
 
+
+
 class Verse
   def initialize(bottle_stock)
     @bottle_stock = bottle_stock
@@ -10,7 +12,7 @@ class Verse
 
   def stock
     beer_on_the_wall(end_of_line = ", ") +
-     bottle_of_beer + ".\n"
+      bottle_of_beer + ".\n"
   end
 
   def take_one
@@ -31,8 +33,6 @@ class Verse
   def bottle_of_beer
     "#{quantity} #{bottle} of beer"
   end
-
-
 
   def quantity
     if @bottle_stock.is_empty
@@ -59,6 +59,7 @@ class Verse
 
 end
 
+#TODO: try with object value, remove/decreminte return an object value
 class BottleStock
   attr_reader :quantity
 
@@ -90,7 +91,6 @@ class Bottles
   private
 
   attr :stock
-
 
 end
 
