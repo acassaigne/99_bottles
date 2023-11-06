@@ -8,17 +8,51 @@ class Verse
     @bottle_stock = bottle_stock
   end
 
-  def beer_on_the_wall
-    "#{@bottle_stock.quantity} #{self.bottle} of beer on the wall, "
+  def stock
+    beer_on_the_wall(end_of_line = ", ") +
+     bottle_of_beer + ".\n"
+  end
+
+  def take_one
+    take_one_sentence +
+      beer_on_the_wall
   end
 
   private
 
+  def beer_on_the_wall(end_of_line = ".\n")
+    "#{bottle_of_beer} on the wall" + end_of_line
+  end
+
+  def take_one_sentence
+    "Take #{pronoun} down and pass it around, "
+  end
+
+  def bottle_of_beer
+    "#{quantity} #{bottle} of beer"
+  end
+
+
+
+  def quantity
+    if @bottle_stock.is_empty
+      return "no more"
+    end
+    "#{@bottle_stock.quantity}"
+  end
+
   def bottle
-    if @bottle_stock.quantity > 1
+    if @bottle_stock.quantity > 1 or @bottle_stock.is_empty
       return "bottles"
     end
     "bottle"
+  end
+
+  def pronoun
+    if @bottle_stock.is_empty
+      return "it"
+    end
+    "one"
   end
 
   attr :bottle_stock
@@ -36,34 +70,8 @@ class BottleStock
     @quantity -= 1
   end
 
-  def print
-    if is_empty
-      return "no more bottles"
-    end
-    "#{@quantity} #{bottle}"
-  end
-
-  def pronoun
-    if is_empty
-      return "it"
-    end
-    "one"
-  end
-
-
   def is_empty
     @quantity == 0
-  end
-
-  private
-
-
-  def bottle
-    word = "bottle"
-    if @quantity > 1
-      return word + "s"
-    end
-    word
   end
 
 end
@@ -71,11 +79,11 @@ end
 class Bottles
 
   def verse(number)
-    @stock = BottleStock.new(count = number)
-    @verse = Verse.new(bottle_stock = @stock)
-    verse_stock = stock_sentence
+    stock = BottleStock.new(initial_stock = number)
+    verse = Verse.new(bottle_stock = stock)
+    verse_stock = verse.stock
     stock.remove
-    verse_take_one = take_one_sentence
+    verse_take_one = verse.take_one
     verse_stock + verse_take_one
   end
 
@@ -83,20 +91,7 @@ class Bottles
 
   attr :stock
 
-  def stock_sentence_3
-    "#{@stock.print} of beer on the wall, " +
-      "#{@stock.print} of beer.\n"
-  end
 
-  def stock_sentence
-    @verse.beer_on_the_wall +
-      "#{@stock.print} of beer.\n"
-  end
-
-  def take_one_sentence
-    "Take #{@stock.pronoun} down and pass it around, " +
-      "#{@stock.print} of beer on the wall.\n"
-  end
 end
 
 class BottlesTest < Minitest::Test
