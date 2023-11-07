@@ -9,24 +9,24 @@ class Verse
   end
 
   def stock
-    beer_on_the_wall(end_of_line = ", ") +
+    beer_on_the_wall(start = true) +
       bottle_of_beer + ".\n"
   end
 
-  def take_one
-    take_one_sentence +
-      beer_on_the_wall
+  def take_one_bottle
+    return "Go to the store and buy some more, " if @bottle_stock.is_empty
+    "Take #{pronoun} down and pass it around, "
+  end
+
+  def beer_on_the_wall(start = true)
+    sentence = "#{bottle_of_beer} on the wall"
+    if start
+      return sentence.capitalize + ", "
+    end
+    sentence + ".\n"
   end
 
   private
-
-  def beer_on_the_wall(end_of_line = ".\n")
-    "#{bottle_of_beer} on the wall" + end_of_line
-  end
-
-  def take_one_sentence
-    "Take #{pronoun} down and pass it around, "
-  end
 
   def bottle_of_beer
     "#{quantity} #{bottle} of beer"
@@ -47,7 +47,7 @@ class Verse
   end
 
   def pronoun
-    if @bottle_stock.is_empty
+    if @bottle_stock.is_the_last_one
       return "it"
     end
     "one"
@@ -65,12 +65,20 @@ class BottleStock
   end
 
   def decremente
+    if is_empty
+      return BottleStock.new(quantity = 99)
+    end
     BottleStock.new(quantity = @quantity - 1)
+  end
+
+  def is_the_last_one
+    return !are_there_many
   end
 
   def are_there_many
     @quantity > 1
   end
+
   def is_empty
     @quantity == 0
   end
@@ -81,7 +89,8 @@ class Bottles
 
   def verse(number)
     stock = BottleStock.new(initial_stock = number)
-    return Verse.new(bottle_stock = stock).stock + Verse.new(stock.decremente).take_one
+    verse = Verse.new(bottle_stock = stock)
+    return verse.stock + verse.take_one_bottle + Verse.new(stock.decremente).beer_on_the_wall(start = false)
   end
 
   private
@@ -128,7 +137,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_verse_0
-    skip
     expected =
       "No more bottles of beer on the wall, " +
         "no more bottles of beer.\n" +
