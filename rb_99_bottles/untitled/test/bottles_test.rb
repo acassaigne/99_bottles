@@ -3,8 +3,6 @@ require 'minitest/autorun'
 require 'minitest/pride'
 # require_relative '../lib/bottles'
 
-
-
 class Verse
   def initialize(bottle_stock)
     @bottle_stock = bottle_stock
@@ -42,7 +40,7 @@ class Verse
   end
 
   def bottle
-    if @bottle_stock.quantity > 1 or @bottle_stock.is_empty
+    if @bottle_stock.are_there_many or @bottle_stock.is_empty
       return "bottles"
     end
     "bottle"
@@ -59,7 +57,6 @@ class Verse
 
 end
 
-#TODO: try with object value, remove/decreminte return an object value
 class BottleStock
   attr_reader :quantity
 
@@ -67,10 +64,13 @@ class BottleStock
     @quantity = quantity
   end
 
-  def remove
-    @quantity -= 1
+  def decremente
+    BottleStock.new(quantity = @quantity - 1)
   end
 
+  def are_there_many
+    @quantity > 1
+  end
   def is_empty
     @quantity == 0
   end
@@ -81,11 +81,7 @@ class Bottles
 
   def verse(number)
     stock = BottleStock.new(initial_stock = number)
-    verse = Verse.new(bottle_stock = stock)
-    verse_stock = verse.stock
-    stock.remove
-    verse_take_one = verse.take_one
-    verse_stock + verse_take_one
+    return Verse.new(bottle_stock = stock).stock + Verse.new(stock.decremente).take_one
   end
 
   private
