@@ -18,15 +18,18 @@ class Verse
     "Take #{pronoun} down and pass it around, "
   end
 
-  def beer_on_the_wall(start = true)
+  def beer_on_the_wall(first_line = true)
     sentence = "#{bottle_of_beer} on the wall"
-    if start
-      return sentence.capitalize + ", "
-    end
-    sentence + ".\n"
+    sentence.capitalize! if first_line
+    sentence + end_of_line(first_line = first_line)
   end
 
   private
+
+  def end_of_line(first_line = true)
+    return ", " if first_line
+    ".\n"
+  end
 
   def bottle_of_beer
     "#{quantity} #{bottle} of beer"
@@ -43,7 +46,9 @@ class Verse
     if @bottle_stock.are_there_many or @bottle_stock.is_empty
       return "bottles"
     end
-    "bottle"
+    return "bottle" if @bottle_stock.is_the_last_one
+    #FIXME: why it's a bug
+    #"bottles"
   end
 
   def pronoun
