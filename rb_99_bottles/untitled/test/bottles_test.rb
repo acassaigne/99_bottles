@@ -32,14 +32,7 @@ class Verse
   end
 
   def bottle_of_beer
-    "#{quantity} #{bottle} of beer"
-  end
-
-  def quantity
-    if @bottle_stock.is_empty
-      return "no more"
-    end
-    "#{@bottle_stock.quantity}"
+    "#{@bottle_stock} #{bottle} of beer"
   end
 
   def bottle
@@ -49,8 +42,6 @@ class Verse
   def pronoun
     return Pronoun.new(bottle_stock = @bottle_stock).when_take_bottle
   end
-
-  attr :bottle_stock
 
 end
 
@@ -81,10 +72,10 @@ class BottleStock
   end
 
   def to_s
-    if @bottle_stock.is_empty
+    if is_empty
       return "no more"
     end
-    "#{@bottle_stock.quantity}"
+    "#{@quantity}"
   end
 
 end
