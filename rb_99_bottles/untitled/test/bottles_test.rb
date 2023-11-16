@@ -43,19 +43,11 @@ class Verse
   end
 
   def bottle
-    if @bottle_stock.are_there_many or @bottle_stock.is_empty
-      return "bottles"
-    end
-    return "bottle" if @bottle_stock.is_the_last_one
-    # FIXME: why it's a bug
-    #"bottles"
+    return NounBottle.new(bottle_stock = @bottle_stock).to_s
   end
 
   def pronoun
-    if @bottle_stock.is_the_last_one
-      return "it"
-    end
-    "one"
+    return Pronoun.new(bottle_stock = @bottle_stock).when_take_bottle
   end
 
   attr :bottle_stock
@@ -88,6 +80,13 @@ class BottleStock
     @quantity == 0
   end
 
+  def to_s
+    if @bottle_stock.is_empty
+      return "no more"
+    end
+    "#{@bottle_stock.quantity}"
+  end
+
 end
 
 class Bottles
@@ -97,10 +96,6 @@ class Bottles
     verse = Verse.new(bottle_stock = stock)
     return verse.stock + verse.take_one_bottle + Verse.new(stock.decremente).beer_on_the_wall(start = false)
   end
-
-  private
-
-  attr :bottle_stock
 
 end
 
@@ -115,6 +110,17 @@ class NounBottle
   end
 end
 
+class Pronoun
+  def initialize(bottle_stock)
+    @bottle_stock = bottle_stock
+  end
+
+  def when_take_bottle
+    return "it" if @bottle_stock.is_the_last_one
+    "one"
+  end
+end
+
 class NounBottleTest < Minitest::Test
   def test_plural
     assert_equal "bottles", NounBottle.new(BottleStock.new(4)).to_s
@@ -126,6 +132,16 @@ class NounBottleTest < Minitest::Test
 
   def test_no_more_bottles
     assert_equal "bottles", NounBottle.new(BottleStock.new(0)).to_s
+  end
+end
+
+class PronounTest < Minitest::Test
+  def test_pronoun_for_take_bottle
+    assert_equal "one", Pronoun.new(BottleStock.new(4)).when_take_bottle
+  end
+
+  def test_pronoun_for_take_bottle_when_is_last_one
+    assert_equal "it", Pronoun.new(BottleStock.new(1)).when_take_bottle
   end
 end
 
