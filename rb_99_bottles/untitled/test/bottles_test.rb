@@ -72,9 +72,7 @@ class BottleStock
   end
 
   def to_s
-    if is_empty
-      return "no more"
-    end
+    return "no more" if is_empty
     "#{@quantity}"
   end
 
