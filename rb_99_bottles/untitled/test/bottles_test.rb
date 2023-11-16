@@ -20,11 +20,20 @@ class Verse
 
   def beer_on_the_wall(first_line = true)
     sentence = "#{bottle_of_beer} on the wall"
+    #FIXME: why he don't work!
+    # return display_for_position(first_line,sentence)
     sentence.capitalize! if first_line
     sentence + end_of_line(first_line = first_line)
   end
 
   private
+
+  def display_for_position(on_first_line, sentence)
+    if on_first_line
+      sentence.capitalize + ", "
+    end
+    sentence + ".\n"
+  end
 
   def end_of_line(first_line = true)
     return ", " if first_line
