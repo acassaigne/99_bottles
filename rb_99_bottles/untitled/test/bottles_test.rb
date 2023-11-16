@@ -47,7 +47,7 @@ class Verse
       return "bottles"
     end
     return "bottle" if @bottle_stock.is_the_last_one
-    #FIXME: why it's a bug
+    # FIXME: why it's a bug
     #"bottles"
   end
 
@@ -77,7 +77,7 @@ class BottleStock
   end
 
   def is_the_last_one
-    return !are_there_many
+    return @quantity == 1
   end
 
   def are_there_many
@@ -100,8 +100,33 @@ class Bottles
 
   private
 
-  attr :stock
+  attr :bottle_stock
 
+end
+
+class NounBottle
+  def initialize(bottle_stock)
+    @bottle_stock = bottle_stock
+  end
+
+  def to_s
+    return "bottle" if @bottle_stock.is_the_last_one
+    "bottles"
+  end
+end
+
+class NounBottleTest < Minitest::Test
+  def test_plural
+    assert_equal "bottles", NounBottle.new(BottleStock.new(4)).to_s
+  end
+
+  def test_singular
+    assert_equal "bottle", NounBottle.new(BottleStock.new(1)).to_s
+  end
+
+  def test_no_more_bottles
+    assert_equal "bottles", NounBottle.new(BottleStock.new(0)).to_s
+  end
 end
 
 class BottlesTest < Minitest::Test
