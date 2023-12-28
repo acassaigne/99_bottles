@@ -24,8 +24,8 @@ class Verse
 
   private
 
-  def punctuation(on_first_part, verse)
-    return verse.capitalize + ", " if on_first_part
+  def punctuation(first_line, verse)
+    return verse.capitalize + ", " if first_line
     verse + ".\n"
   end
 
@@ -87,6 +87,16 @@ class Bottles
     stock = BottleStock.new(initial_stock = number)
     verse = Verse.new(bottle_stock = stock)
     return verse.stock + verse.take_one_bottle + Verse.new(stock.decremente).beer_on_the_wall(start = false)
+  end
+
+  def verses(upper_stock, lower_stock)
+    result = []
+    upper_stock.downto(lower_stock) { |num| result.append(verse(num)) }
+    result.join("\n")
+  end
+
+  def song
+    verses(upper_stock = 99, lower_stock = 0)
   end
 
 end
@@ -184,7 +194,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_a_couple_verses
-    skip
     expected =
       "99 bottles of beer on the wall, " +
         "99 bottles of beer.\n" +
@@ -199,7 +208,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_a_few_verses
-    skip
     expected =
       "2 bottles of beer on the wall, " +
         "2 bottles of beer.\n" +
@@ -219,7 +227,6 @@ class BottlesTest < Minitest::Test
   end
 
   def test_the_whole_song
-    skip
     expected = <<~SONG
       99 bottles of beer on the wall, 99 bottles of beer.
       Take one down and pass it around, 98 bottles of beer on the wall.
